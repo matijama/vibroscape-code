@@ -1,0 +1,10 @@
+_target_: models.Preprocessor.AudioToOpenL3Preprocessor
+input_repr: 'mel128'
+content_type: 'music'
+features: 6144
+sample_rate: ${model.sample_rate}
+normalize: 'waveform'  # waveform scales the batch to 1, none means no scaling
+window_size: 1  # 1 second is fixed for OpenL3
+window_stride: 0.2
+
+

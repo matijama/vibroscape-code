@@ -1,0 +1,118 @@
+defaults:
+  - train_ds: standard
+  - validation_ds: standard
+  - preprocessor: mel
+  - audio_augment: standard
+
+sample_rate: 16000
+batch_size: 16
+
+window_length_in_sec: 3   # 10.24
+normalize_audio: False # normalize each clip to 1
+n_windows: 1
+shift_length_in_sec: 1
+one_clip_length_in_sec: ??? # will be calculated from window_size, it is larger for window_length
+nwin_clip_length_in_sec: ??? # will be calculated from the above
+split_clips_larger_than: 10.0  # if create_db true and a clip is longer than this, it will be split recursively in the manifest into two clips. If set to <=0 or none, will be ignored
+remove_clips_shorter_than: 0.8 # will discard clips shorter than this
+use_p_dur: False # will use p_start and p_end instead of start_time and end_time
+filter_p: False # will discard fg samples without periodicities found (p_freq<1e-3)
+
+create_datasets: 1
+validation_size: 0.1 # approx 10% of the training dataset will be used for validation
+random_seed: 13
+test_size: 0.2  # approx 20% of the dataset will be used for testing
+test_exclude: ['vibro_A1_A2'] # ['samples_activespace', 'studio']
+test_random_seed: 23
+test_step_size: 0.5  # will step in 0.5s increments over test files
+test_batch_size: ${model.batch_size}
+
+db_file: ???
+classes: ???
+class_filter: '(UNL)|(MIC)|(BG12)'
+class_filter_neg: NULL
+
+labels: [] # define in code
+
+  #test_ds:
+  #manifest_filepath: null
+  #sample_rate: ${model.sample_rate}
+  #labels: ${model.labels}
+  #batch_size: 32
+  #shuffle: False
+  #num_workers: 2
+  ##test_loss_idx: 0
+  #vad_stream: True  # loader loads windows of time_length shifted by shift_length to process audio
+  #window_length_in_sec: 4
+  #shift_length_in_sec: 1
+
+pcen:
+  _target_: models.Normalization.PCEN
+  enabled: false
+  input_size: ${model.preprocessor.features}
+  alpha: 0.96
+  smooth_coef: 0.04
+  delta: 2.0
+  root: 2.0
+  floor: 1e-12
+  trainable: true
+  per_channel_smooth_coef: true
+  normalize: "all_features"
+
+spec_stretch:
+    _target_: models.SpectrogramStretch
+    enabled: true
+    n_freq: ${model.preprocessor.features}
+    min_rate: 0.85
+    max_rate: 1.15
+    p: 0.1
+
+spec_augment:
+  _target_: nemo.collections.asr.modules.SpectrogramAugmentation
+  freq_masks: 2
+  time_masks: 2
+  freq_width: 8
+  time_width: 32
+  rect_masks: 0
+  rect_time: 15
+  rect_freq: 8
+  use_numba_spec_augment: false
+
+crop_or_pad_augment:
+  _target_: models.CropOrPadAugmentation # nemo.collections.asr.modules.CropOrPadSpectrogramAugmentation
+  audio_length: ???  # will be calculated
+  random_crop: false
+
+encoder:
+    _target_: nemo.collections.asr.modules.ECAPAEncoder
+    feat_in: ${model.preprocessor.features}
+    filters: [256,256,256,256,768]
+    kernel_sizes: [5,3,3,3,1]
+    dilations: [1,1,2,3,1]
+    scale: 4
+
+decoder:
+  _target_: models.SpeakerDecoder
+  feat_in: 768
+  num_classes: 2
+  pool_mode: 'attention'
+
+optim:
+  name: adamw
+  # lr: 2.0  # with NoamAnnealing this gets scaled by 1/sqrt(d_model)/sqrt(warmup_steps) !!
+  lr: 0.0001  # 0.4 scaled - without NoamAnnealing we scale the default by 1/sqrt(d_model)/sqrt(warmup_steps) !!
+  # optimizer arguments
+  betas: [0.9, 0.98]
+  # less need for weight_decay as we already have large augmentations with SpecAug
+  # you may need weight_decay for large models, small datasets, or when lower augmentation is used
+  weight_decay: 1e-4
+
+  # scheduler setup
+  sched:
+    name: NoamHoldAnnealing
+    # scheduler config override
+    warmup_ratio: 0.05 # 2.5 in 50 epochs
+    #warmup_steps: 3
+    hold_ratio: 0.2 # 10 in 50 epochs
+    decay_rate: 0.5 # 0.33 a bit slower decay than 0.5 (default and also Noam)
+    min_lr: 1e-5

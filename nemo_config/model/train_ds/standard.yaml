@@ -1,0 +1,23 @@
+manifest_filepath: ???
+sample_rate: ${model.sample_rate}
+labels: ${model.labels}
+batch_size: ${model.batch_size}
+shuffle: True
+one_clip_length_in_sec: ${model.one_clip_length_in_sec}   # will be calculated as a bit larger than window_length_in_sec*n_windows for 1 fft windows and random shift augmentation
+nwin_clip_length_in_sec: ${model.nwin_clip_length_in_sec}
+vad_stream: False  # loader loads windows of time_length shifted by shift_length to process audio
+window_length_in_sec: ${model.window_length_in_sec}
+shift_length_in_sec: ${model.shift_length_in_sec}
+n_windows: ${model.n_windows}
+subsample_each_epoch: 0.25 # 1/3 of the data is used by fg class, 2/3 by bg class
+num_workers: 4
+normalize_audio: ${model.normalize_audio} # normalize each clip to 1
+augmentor:
+  shift:
+    prob: 0.5
+    min_shift_ms: -5.0
+    max_shift_ms: 5.0
+#    white_noise:
+#      prob: 0.1
+#      min_level: -90
+#      max_level: -50

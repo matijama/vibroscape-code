@@ -1,0 +1,79 @@
+_target_: models.AudioAugmentation
+enabled: true
+shuffle: true
+modules:
+  #    add_gaussian_noise:
+  #      min_amplitude: 0.0005
+  #      max_amplitude: 0.003
+  #      p: 0.1
+  add_gaussian_snr:
+    min_snr_db: 12
+    max_snr_db: 50
+    p: 0.1
+  band_pass_filter:
+    min_center_freq: 200
+    max_center_freq: 4000
+    min_bandwidth_fraction: 0.5
+    max_bandwidth_fraction: 1.99
+    min_rolloff: 12
+    max_rolloff: 12
+    zero_phase: false
+    p: 0.1
+  band_stop_filter:
+    min_center_freq: 200
+    max_center_freq: 4000
+    min_bandwidth_fraction: 0.5
+    max_bandwidth_fraction: 1
+    min_rolloff: 12
+    max_rolloff: 12
+    zero_phase: false
+    p: 0.1
+  gain:
+    min_gain_db: -12
+    max_gain_db: 12
+    p: 0.2
+  high_pass_filter:
+    min_cutoff_freq: 20
+    max_cutoff_freq: 500
+    min_rolloff: 12
+    max_rolloff: 12
+    zero_phase: false
+    p: 0.1
+  limiter:
+    min_threshold_db: -20
+    max_threshold_db: -2
+    min_attack: 0.0005
+    max_attack: 0.025
+    min_release: 0.05
+    max_release: 0.7
+    threshold_mode: relative_to_signal_peak
+    p: 0.1
+  low_pass_filter:
+    min_cutoff_freq: 800
+    max_cutoff_freq: 4000
+    min_rolloff: 12
+    max_rolloff: 12
+    zero_phase: false
+    p: 0.1
+  #    pitch_shift:
+  #      min_semitones: -2
+  #      max_semitones: 2
+  #      p: 0.1
+  seven_band_parametric_eq:
+    min_gain_db: -12
+    max_gain_db: 12
+    p: 0.05
+  #    time_stretch:
+  #      min_rate: 0.85
+  #      max_rate: 1.15
+  #      leave_length_unchanged: true
+  #      p: 0.1
+  mixup:
+    alpha: 8
+    beta: 2
+    p: 0.1
+  noise:
+    p: 0.1
+    manifest_path: data.wav/Backgrounds/audio.16k/manifest.16k.json
+    min_snr_db: 14
+    max_snr_db: 52

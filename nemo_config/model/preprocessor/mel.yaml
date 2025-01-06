@@ -1,0 +1,16 @@
+_target_: nemo.collections.asr.modules.AudioToMelSpectrogramPreprocessor
+sample_rate: 16000
+normalize: "all_features"
+window_size: 0.032
+window_stride: 0.01
+window: "hann"
+features: 64
+lowfreq: 50
+highfreq: 6000
+log: true
+frame_splicing: 1
+dither: 0.00001
+pad_to: 0
+pad_value: 0.0
+use_torchaudio: false
+

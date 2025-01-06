@@ -1,0 +1,20 @@
+  devices: -1 # number of gpus
+  num_nodes: 1
+  max_epochs: -1
+  max_steps: -1 # computed at runtime if not set
+  val_check_interval: 100 # Set to 0.25 to check 4 times per epoch, or an int for number of iterations
+  check_val_every_n_epoch: null # number of evaluations on validation every n epochs
+  accelerator: gpu
+  strategy: auto
+  accumulate_grad_batches: 1
+  gradient_clip_val: 1.0
+  #amp_level: O0 # O1/O2 for mixed precision
+  #amp_backend: apex
+  precision: 32  # Should be set to 16 for O1 and O2 to enable the AMP.
+  log_every_n_steps: 20  # Interval of logging.
+  enable_progress_bar: True
+#  resume_from_checkpoint: null # The path to a checkpoint file to continue the training, restores the whole state including the epoch, step, LR schedulers, apex, etc.
+  num_sanity_val_steps: 0 # number of steps to perform validation steps for sanity check the validation process before starting the training, setting to 0 disables it
+  sync_batchnorm: true
+  enable_checkpointing: False  # Provided by exp_manager
+  logger: False  # Provided by exp_manager
