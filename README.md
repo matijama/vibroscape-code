@@ -17,13 +17,17 @@ The paper describing the dataset and our first automatic classification methods 
 
 BibTex:
 ```
-@article{Marolt2025,
-   author = {Matija Marolt and Matevž Pesek and Rok Šturm and Juan José López Díez and Behare Rexhepi and Meta Virant-Doberlet},
-   journal = {Ecological Informatics},
-   keywords = {Vibroscape, Ecotremology, Deep learning, Automatic classification, Biotremology, Insects},
-   publisher = {Elsevier Inc.},
-   title = {Computational methods for detecting insect vibrational signals in field vibroscape recordings},
-   year = {2025},
+@article{MAROLT2025103003,
+title = {Computational methods for detecting insect vibrational signals in field vibroscape recordings},
+journal = {Ecological Informatics},
+volume = {86},
+pages = {103003},
+year = {2025},
+issn = {1574-9541},
+doi = {https://doi.org/10.1016/j.ecoinf.2025.103003},
+url = {https://www.sciencedirect.com/science/article/pii/S1574954125000123},
+author = {Matija Marolt and Matevž Pesek and Rok Šturm and Juan José {López Díez} and Behare Rexhepi and Meta Virant-Doberlet},
+keywords = {Vibroscape, Ecotremology, Deep learning, Automatic classification, Biotremology, Insects}
 }
 ``` 
 
