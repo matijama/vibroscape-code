@@ -13,7 +13,7 @@ The repository contains the code for training the models for recognizing the vib
 The models were trained on the <a href="https://github.com/matijama/vibroscape">VibroScape dataset</a>. 
 
 ### Cite us
-The paper describing the dataset and our first automatic classification methods is published in Ecological Informatics. Please cite  [(Marolt et al. 2025)](https://doi.org/10.1016/j.isci.2021.103070) if you use this code or dataset.
+The paper describing the dataset and our first automatic classification methods is published in Ecological Informatics. Please cite  [(Marolt et al. 2025)](https://doi.org/10.1016/j.ecoinf.2025.103003) if you use this code or dataset.
 
 BibTex:
 ```
