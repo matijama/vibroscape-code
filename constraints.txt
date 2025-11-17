@@ -1,0 +1,19 @@
+# These constraints are designed for NeMo 25.07.gpt_oss
+
+# numpy must remain below <2 (lot of NVIDIA packages does not support 2.x yet)
+numpy<2.0.0
+
+numba<0.61.0
+llvmlite<0.46
+megatron-core==0.15.0rc0
+megatron-bridge==0.2.0rc0
+
+# for compatibility with nemo-toolkit 
+fsspec==2024.12.0
+protobuf==5.29.5
+
+# for compatibility with dask-cuda e RAPIDS
+dask-cuda<25.5.0
+cudf<25.5.0
+cuml<25.5.0
+cugraph<25.5.0
