@@ -1,6 +1,7 @@
 import random
 from random import randint
 
+import torchaudio.transforms as T
 import numpy as np
 import scipy
 from audiomentations.core.transforms_interface import BaseWaveformTransform
@@ -95,9 +96,15 @@ class AudioAugmentation(NeuralModule):
         if not self.enabled:
             return input_signal, length
 
-        isig_cpu = input_signal.cpu().numpy()
+        isig_cpu = input_signal.detach().cpu().numpy()
+        if isistance(length, torch.tensor):
+            lens = length.detach().cpu().numpy().astype(np.int64)
+        else:
+            lens = np.asarray(length, dtype=np.int64)
+            
         for i in range(isig_cpu.shape[0]):
-            t = isig_cpu[i][:length[i]]
+            L = int.len(lens[i])
+            t = isig_cpu[i][:L]
             # mixup here
             if self.mixup:
                 if not self.mixup.are_parameters_frozen or self.mixup.parameters["should_apply"] is None:
@@ -106,9 +113,12 @@ class AudioAugmentation(NeuralModule):
                     t = self.mixup.apply(samples=t, batch=isig_cpu, length=length)
 
             t = self.audio_augmentations(samples=t, sample_rate=sample_rate)
-            isig_cpu[i][:length[i]] = t
+            isig_cpu[i][:L] = t
+            #define value 0 in the tail to avoid NaN propagation in furtherpreprocessing
+            if L < isig_cpu.shape[1]:
+                isig_cpu[i][L:] = 0.0
 
-        input_signal = torch.from_numpy(isig_cpu).to(input_signal.device)
+        input_signal = torch.from_numpy(isig_cpu).to(input_signal.device, dtype=input_signal.dtype)
 
         # stretch in the end
         aug_stretch = next((x for x in self.audio_augmentations.transforms if type(x) is PyTimeStretch), None)
