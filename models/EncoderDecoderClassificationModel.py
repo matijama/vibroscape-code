@@ -232,6 +232,8 @@ class EncoderDecoderClassificationModel(nemo.collections.asr.models.classificati
 
     def _setup_dataloader_from_config(self, config: DictConfig):
 
+        
+
         if 'augmentor' in config:
             augmentor = process_augmentations(config['augmentor'])
         else:
@@ -286,7 +288,7 @@ class EncoderDecoderClassificationModel(nemo.collections.asr.models.classificati
                 dataset.new_subset()
 
             batch_size = config['batch_size']
-            collate_func = dataset.collate_fn
+            collate_func = dataset._collate_fn 
 
         return self._setup_dataloader(config, dataset, batch_size, collate_func, shuffle)
 
